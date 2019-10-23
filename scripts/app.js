@@ -3,22 +3,25 @@
 var catalog = [];
 
 function getCatalog () {
-    this.catalog = [
-        {
-            title:"First Item",
-            description:"Random description",
-            price: 11.99,
-            image:"https://cdn.shopify.com/s/files/1/2253/9063/products/Web-Res-R1X-Iso-V2_400x.jpg?v=1560899741",
-            category:"skateboard"
+    var serverURL = "http://restclass.azurewebsites.net/API/points"
+    $.ajax({
+        url: serverURL,
+        type: "GET",
+        success: function (res) {
+            console.log("Req successful", res);
+
+            for(let i =0; i < res.length; i++){
+                var item = res[i];
+                if(item.user == "Mike"){
+                    catalog.push(item); //append to catalog
+                }
+            }
+            displayCatalog();
         },
-        {
-            title:"Second Item",
-            description:"fun description",
-            price: 110.99,
-            image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvb_a0JxBfA1StsV-2eIeAAtp7an-Qig9H0aU1-TK20MdtLW3viA",
-            category:"shortBoard"
+        error:function(error){
+            console.error("Error on req", error);
         }
-    ];
+    });
 }
 
 function displayCatalog () {
@@ -42,7 +45,7 @@ function displayItem(item){
             <p class="card-text">${item.description}</p>
             <h6>${item.price}</h6>
             <a href="#" class="btn btn-primary">Add to cart</a>
-         </div>
+        </div>
     </div>`;
     //add the li to UL
     ul.append(li);
@@ -66,7 +69,6 @@ function init() {
     console.log("hi");
     // initalizing 
     getCatalog();
-    displayCatalog();
     //events 
     $("#btnSearch").click(search);
     $("#txtSearch").keypress(function(arg){

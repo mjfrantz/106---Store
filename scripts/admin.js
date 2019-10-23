@@ -6,6 +6,7 @@ function Item(title, description, price, image, category){
     this.price = price;
     this.image = image;
     this.category = category;
+    this.user = "Mike";
 }
 
 function saveItem() {
@@ -25,8 +26,35 @@ function saveItem() {
     console.log("the title: ", theItem.title)
     
     //save object to backend
+    var serverURL = "http://restclass.azurewebsites.net/API/points"
+    $.ajax({
+        url: serverURL,
+        type: "POST",
+        data: JSON.stringify(theItem),
+        contentType: "application/json",
+        success:function(res){
+            console.log("Req successful", res);
+        },
+        error:function(error){
+            console.error("Error on req", error);
+        }
+    });
 }
 
+function testAjax(){
+    var serverURL = "http://restclass.azurewebsites.net/API/test";
+
+    $.ajax({
+        url:serverURL,
+        type:"GET",
+        success:function(res){
+            console.log("Req successful", res);
+        },
+        error:function(error){
+            console.error("Error on req", error);
+        }
+    });
+}
 
 function init(){
     console.log("Init");
